@@ -6,8 +6,7 @@
 
 Um sistema web completo para gerenciamento de estoque, desenvolvido com Python e Django. A aplicação permite o controle total sobre produtos, incluindo o registro detalhado de entradas e saídas, fornecendo uma visão clara e organizada do inventário.
 
-![Demonstração do Dashboard](https://placehold.co/800x400/0d6efd/ffffff?text=Insira+um+GIF+ou+Screenshot+do+Dashboard+aqui)
-
+![Demonstração do Dashboard](./docs/img/Dashboard.png)
 ---
 
 ## ✨ Funcionalidades Principais
@@ -110,4 +109,4 @@ Este projeto está sob a licença MIT.
 
 ---
 
-Desenvolvido com ❤️ por [Seu Nome](https://github.com/seu-usuario)
+Desenvolvido por Gledyson Cruz(https://github.com/gledyson007)
