@@ -1,0 +1,15 @@
+{% extends "estoque/base.html" %}
+
+{% block title %}Logout - SGE{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 50px auto;">
+    <div class="card">
+        <h2>Você saiu com sucesso.</h2>
+        <hr>
+        <p>Obrigado por usar o Sistema de Gerenciamento de Estoque.</p>
+        <br>
+        <p><a href="{% url 'login' %}">Clique aqui para entrar novamente.</a></p>
+    </div>
+</div>
+{% endblock %}

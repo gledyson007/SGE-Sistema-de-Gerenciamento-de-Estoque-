@@ -1,0 +1,74 @@
+{% extends "estoque/base.html" %}
+
+{% block title %}Lista de Produtos - {{ block.super }}{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center">
+        <h1>Lista de Todos os Produtos</h1>
+        <a href="{% url 'cria_produto' %}" class="btn btn-primary">
+            + Adicionar Novo Produto
+        </a>
+    </div>
+
+    <form method="GET" action="{% url 'lista_produtos' %}" class="my-3">
+        <div class="input-group">
+            <input type="text" class="form-control" name="q" placeholder="Buscar por nome ou SKU..." value="{{ request.GET.q }}">
+            <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+        </div>
+    </form>
+
+    <hr>
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th scope="col">Nome do Produto</th>
+                <th scope="col">SKU</th>
+                <th scope="col">Preço de Venda</th>
+                <th scope="col">Estoque Atual</th>
+                <th scope="col">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produto in page_obj %}
+                <tr>
+                    <td>
+                        <a href="{% url 'detalhe_produto' pk=produto.pk %}">{{ produto.nome }}</a>
+                    </td>
+                    <td>{{ produto.sku }}</td>
+                    <td>R$ {{ produto.preco_venda|floatformat:2 }}</td>
+                    <td>{{ produto.quantidade }}</td>
+                    <td>
+                        <a href="{% url 'edita_produto' pk=produto.pk %}" class="btn btn-secondary btn-sm">Editar</a>
+                        <a href="{% url 'deleta_produto' pk=produto.pk %}" class="btn btn-danger btn-sm">Deletar</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Nenhum produto encontrado.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- ALTERAÇÃO ADICIONADA: CONTROLES DE PAGINAÇÃO -->1
+    <nav aria-label="Navegação de página">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1&q={{ request.GET.q | urlencode }}">&laquo; Primeira</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q | urlencode }}">Anterior</a></li>
+            {% endif %}
+
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="True">
+                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                </a>
+            </li>
+
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q | urlencode }}">Próxima</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ request.GET.q | urlencode }}">Última &raquo;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+{% endblock %}

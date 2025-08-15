@@ -1,0 +1,18 @@
+{% extends "estoque/base.html" %}
+
+{% block title %}Confirmar Deleção - {{ block.super }}{% endblock %}
+
+{% block content %}
+    <h1>Confirmar Deleção</h1>
+    <hr>
+    <p class="h4">Você tem certeza que deseja deletar o produto "{{ produto.nome }}"?</p>
+    <p>Esta ação não pode ser desfeita.</p>
+    <br>
+    <form method="post">
+        {% csrf_token %}
+
+       <a href="{% url 'lista_produtos' %}" class="btn btn-secondary">Cancelar</a>
+
+        <button type="submit" class="btn btn-danger">Sim, Deletar</button>
+    </form>
+{% endblock %}

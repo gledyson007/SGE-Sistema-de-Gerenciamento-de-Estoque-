@@ -1,0 +1,15 @@
+{% extends 'estoque/base.html' %}
+
+{% block title %}Adicionar Produto - {{ block.super }}{% endblock %}
+
+{% block content %}
+    <h1>Adicionar Novo Produto</h1>
+    <br>
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary">Salvar Produto</button>
+    </form>
+{% endblock %}

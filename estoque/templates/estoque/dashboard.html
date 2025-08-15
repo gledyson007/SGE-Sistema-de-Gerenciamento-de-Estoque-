@@ -1,0 +1,99 @@
+{% extends "estoque/base.html" %}
+{% load static %} {# Carrega a tag json_script se necessário, mas para este caso vamos fazer manualmente #}
+
+{% block title %}Dashboard - {{ block.super }}{% endblock %}
+
+{% block content %}
+    <h1>Painel de Controle</h1>
+    <hr>
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-primary h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Valor Total do Estoque (Custo)</h5>
+                    <p class="card-text fs-4">R$ {{ valor_total_estoque|floatformat:2 }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-info h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Total de Itens no Estoque</h5>
+                    <p class="card-text fs-4">{{ total_itens_estoque }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-warning h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Produtos com Estoque Baixo (<=10)</h5>
+                    <p class="card-text fs-4">{{ produtos_estoque_baixo }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-danger h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Produtos Sem Estoque</h5>
+                    <p class="card-text fs-4">{{ produtos_sem_estoque }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-7">
+            <h3>Top 5 Produtos com Mais Estoque</h3>
+            <canvas id="estoqueChart"></canvas>
+        </div>
+        <div class="col-md-5">
+            <h3>Movimentações Recentes</h3>
+            <ul class="list-group">
+                {% for mov in movimentacoes_recentes %}
+                    <li class="list-group-item">
+                        {% if mov.tipo == 'ENTRADA' %}
+                            <span class="badge bg-success">ENTRADA</span>
+                        {% else %}
+                            <span class="badge bg-danger">SAÍDA</span>
+                        {% endif %}
+                        <strong>{{ mov.quantidade }}x</strong> de <a href="{% url 'detalhe_produto' pk=mov.produto.pk %}">{{ mov.produto.nome }}</a>
+                        <small class="text-muted d-block">em {{ mov.data_movimentacao|date:"d/m/Y H:i" }} por {{ mov.usuario.username }}</small>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">Nenhuma movimentação recente.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('estoqueChart');
+        
+        // Pegando os dados do Django e passando para o JavaScript
+        const nomesProdutos = [{% for produto in produtos_mais_estoque %}"{{ produto.nome }}",{% endfor %}];
+        const qtdsProdutos = [{% for produto in produtos_mais_estoque %}{{ produto.quantidade }},{% endfor %}];
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: nomesProdutos,
+                datasets: [{
+                    label: 'Quantidade em Estoque',
+                    data: qtdsProdutos,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                indexAxis: 'y', // Deixa o gráfico de barras na horizontal
+                responsive: true,
+            }
+        });
+    </script>
+{% endblock %}

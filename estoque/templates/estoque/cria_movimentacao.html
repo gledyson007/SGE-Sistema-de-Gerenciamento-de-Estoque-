@@ -1,0 +1,14 @@
+{% extends "estoque/base.html" %}
+
+{% block title %}Registrar {{ tipo|title }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+    <h1>Registrar {{ tipo|title }} para: {{ produto.nome }}</h1>
+    <p>Estoque atual: {{ produto.quantidade }}</p>
+    <hr>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Salvar Movimentação</button>
+    </form>
+{% endblock %}
